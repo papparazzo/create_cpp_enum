@@ -24,7 +24,7 @@ import re
 
 def strip(str):
     first_index = -1
-    match = re.search(r'[^A-Za-z_]', str)
+    match = re.search(r'[^A-Za-z0-9_]', str)
     if match:
         first_index = match.start()
 
