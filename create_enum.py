@@ -93,7 +93,7 @@ for i in list:
 print(f'    throw moba::UnsupportedOperationException{{"{args.name}: invalid value given"}};')
 print('}')
 print()
-print(f'inline std::string {args.name[0].lower()}{args.name[1:]}EnumToString(ErrorId s) {{')
+print(f'inline std::string {args.name[0].lower()}{args.name[1:]}EnumToString({args.name} s) {{')
 print('    switch(s) {')
 for i in list:
     i = strip(i) 
