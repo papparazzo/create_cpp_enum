@@ -14,35 +14,36 @@
   GNU Affero General Public License for more details.
  
   You should have received a copy of the GNU Affero General Public License
-  along with this program. If not, see <http://www.gnu.org/licenses/agpl.txt>.
-""" 
+  along with this program. If not, see <https://www.gnu.org/licenses/agpl.txt>.
+"""
 
 import sys
 import datetime
 import argparse
 import re
 
-def strip(str):
+
+def strip(string):
     first_index = -1
-    match = re.search(r'[^A-Za-z0-9_]', str)
+    match = re.search(r'[^A-Za-z0-9_]', string)
     if match:
         first_index = match.start()
 
     if first_index == -1:
-        return str
+        return string
 
-    
-    return str[:first_index]
+    return string[:first_index]
+
 
 parser = argparse.ArgumentParser(description='creates a c++ enum')
 parser.add_argument('-n', '--name', dest='name', help='enum name', required=True)
 
 args = parser.parse_args()
 
-list=[]
+items = []
 
 for line in sys.stdin:
-    list.append(line.strip(' \n'))
+    items.append(line.strip(' \n'))
 
 print(f"""/*
  *  Project:    moba-lib-msghandling
@@ -60,7 +61,7 @@ print(f"""/*
  *  GNU Affero General Public License for more details.
  * 
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/agpl.txt>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/agpl.txt>.
  * 
  */
  
@@ -71,7 +72,7 @@ print(f"""/*
 
 print(f'enum class {args.name} {{')
 
-for i in list:
+for i in items:
     if i == '':
         print()
         continue
@@ -81,32 +82,30 @@ print('};')
 print()
 
 print(f'inline {args.name} stringTo{args.name}Enum(const std::string &s) {{')
-for i in list:
-    i = strip(i)    
+for i in items:
+    i = strip(i)
     if i == '':
         continue
 
     print(f'    if(s == "{i}") {{')
     print(f'        return {args.name}::{i};')
-    print('    }') 
+    print('    }')
 
 print(f'    throw moba::UnsupportedOperationException{{"{args.name}: invalid value given"}};')
 print('}')
 print()
 print(f'inline std::string {args.name[0].lower()}{args.name[1:]}EnumToString({args.name} s) {{')
 print('    switch(s) {')
-for i in list:
-    i = strip(i) 
+for i in items:
+    i = strip(i)
     if i == '':
         continue
 
     print(f'        case {args.name}::{i}:')
     print(f'            return "{i}";')
-    print() 
+    print()
 
 print('        default:')
 print(f'            throw moba::UnsupportedOperationException{{"{args.name}: invalid value given"}};')
 print('    }')
 print('}')
-
-
